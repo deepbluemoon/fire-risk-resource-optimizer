@@ -1,0 +1,37 @@
+# 자격증명 (절대 커밋 금지)
+.env
+*.pem
+*.key
+
+# Python 가상환경 (749MB, 환경 종속 — requirements.txt 로 재구성)
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 원자료 (공공데이터/DB 에서 재취득 가능, 96MB)
+data/fire_utf8.csv
+data/소방청_화재현황_20231231.csv
+
+# 백업/이전 버전
+*-backup.md
+*.bak
+*.bak-*
+*.prev
+
+# OS
+.DS_Store
+
+# --- 서비스 런타임 ---
+node_modules/
+dist/
+run/
+logs/
+*.pid
+
+# --- Python 빌드 산출물 ---
+*.egg-info/
+.pytest_cache/
+
+# git worktree 체크아웃 (branches/<브랜치명>/ — 저장소 안에 중첩되므로 추적하지 않는다)
+branches/

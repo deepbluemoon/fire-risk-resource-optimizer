@@ -1,0 +1,19 @@
+# systemd unit — 백엔드 상시 기동 (Linux 배포용). Docker 를 쓰지 않는다.
+# 설치: sudo cp deploy/fire-backend.service /etc/systemd/system/
+#       sudo systemctl daemon-reload && sudo systemctl enable --now fire-backend
+[Unit]
+Description=화재위험 예측 API (Express :9522)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/project2608/backend
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+StandardOutput=append:/opt/project2608/logs/backend.log
+StandardError=append:/opt/project2608/logs/backend.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,254 @@
+/* IBM Carbon — 기본은 밝은 화면(Gray 10), 선택하면 어두운 화면(Gray 100).
+   토큰 값은 frontend/DESIGN.md 에서 그대로 가져왔다.
+   사각 모서리(0~4px), 그림자 없음, 헤어라인 분리, 단일 파랑 액센트.
+
+   기본값을 밝게 둔 이유: data-theme 속성은 앱이 뜬 뒤에 붙는다. :root 가 어두우면
+   그 사이에 검은 화면이 한 번 번쩍인다. 기본을 밝게 두면 그 깜빡임이 없다. */
+
+:root {
+  color-scheme: light;
+
+  /* --- 표면 (Carbon Gray 10) ---
+     어두운 테마를 그대로 뒤집으면 어색하다. 그쪽은 '밝을수록 위로 떠 있다' 인데
+     밝은 화면에서는 그 규칙이 안 통한다. 여기서는 흰 바탕이 카드, 회색이 배경이고
+     강조는 한 단계 더 진한 회색으로 준다. */
+  --canvas:        #eef1f5;   /* 페이지 바탕 */
+  --surface-1:     #ffffff;   /* 카드·타일 */
+  --surface-2:     #e2e7ee;   /* 표 머리말·칩 — 카드보다 한 단계 진하게 */
+  --surface-hover: #f2f5f9;   /* 마우스 올림 — surface-2 와 반드시 달라야 보인다 */
+  --hairline:      #c2cad4;   /* 흰 바탕에서는 선이 진해야 칸이 구분된다 */
+  --hairline-soft: #dde3ea;
+  /* 여러 화면이 var(--surface) 로 쓰는데 정의가 없어 배경이 투명하게 빠지고 있었다 */
+  --surface:       var(--surface-1);
+
+  /* --- 잉크 ---
+     #393939 는 본문 옆에 두면 거의 검게 보여 위계가 사라진다. 한 단계 밝힌다. */
+  --ink:        #161616;
+  --ink-muted:  #3f4650;
+  --ink-subtle: #5b6472;
+  --ink-faint:  #7c8593;
+
+  /* --- 액센트 (단 하나) --- */
+  --primary:       #0f62fe;
+  --primary-strong:#0f62fe;
+  --primary-hover: #0353e9;
+  --on-primary:    #ffffff;
+
+  /* --- 위험 등급 ---
+     색을 어둡게 하면 흰 바탕에서 읽히긴 하지만 채도가 떨어져 탁해진다.
+     그래서 쓰임을 둘로 나눈다.
+       --g-*      채우기·표식·테두리용. 채도를 살려 선명하게.
+       --g-*-ink  글자용. 같은 색을 어둡게 눌러 흰 바탕에서 읽히게.
+     한 색으로 둘 다 하려 들면 '읽히지만 탁한' 절충이 된다. */
+  --g-low:      #24a148;
+  --g-mid:      #f1c21b;
+  --g-high:     #ff832b;
+  --g-critical: #da1e28;
+  --g-none:     #8d8d8d;
+
+  --g-low-ink:      #0b7a35;
+  --g-mid-ink:      #8a6300;
+  --g-high-ink:     #c0431a;
+  --g-critical-ink: #c21324;
+  --g-none-ink:     #6f6f6f;
+
+  /* --- 타이포 --- */
+  --font-sans: 'IBM Plex Sans KR', 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* --- 간격 (DESIGN.md spacing scale) --- */
+  --sp-xxs: 4px;  --sp-xs: 8px;  --sp-sm: 12px; --sp-md: 16px;
+  --sp-lg: 24px;  --sp-xl: 32px; --sp-xxl: 48px;
+
+  /* --- 모서리 --- */
+  --r-none: 0; --r-xs: 2px; --r-sm: 4px;
+
+  --rail: 232px;
+  --topbar: 48px;
+}
+
+/* --- 색 농도 -------------------------------------------------------------
+   같은 비율로 색을 섞어도 어두운 배경과 밝은 배경에서 보이는 정도가 딴판이다.
+   어두운 바탕에 10% 를 섞으면 뚜렷한 색조가 생기지만, 흰 바탕에 10% 는 거의
+   보이지 않는다. 화면 코드가 비율을 직접 쓰지 않고 이 토큰을 쓰게 한다. */
+:root { --tint: 26%; --tint-soft: 15%; }
+:root[data-theme='dark'] { --tint: 14%; --tint-soft: 9%; }
+
+/* --- 안쪽 칸의 바탕 -------------------------------------------------------
+   목록 항목·지도 같은 '카드 안의 칸' 은 어두운 화면에서 한 단계 밝은 회색을
+   깔아야 층이 보인다. 그런데 밝은 화면에서 같은 방식으로 회색을 깔면 흰 카드
+   위에 회색 덩어리가 얹힌 꼴이 되어 답답하다.
+   밝은 화면에서는 카드와 같은 흰색으로 두고 선으로만 나눈다. */
+:root { --inset: var(--surface-1); --inset-line: var(--hairline); }
+:root[data-theme='dark'] { --inset: var(--surface-2); --inset-line: transparent; }
+
+/* --- 중단점 규약 ---------------------------------------------------------
+   화면마다 제각각인 값을 쓰면 창을 줄일 때 요소가 서로 다른 지점에서 튀어
+   레이아웃이 어그러진 것처럼 보인다. 아래 세 값만 쓴다.
+
+     1200px  넓은 화면 → 보통 화면.   3열 → 2열, 옆 칸이 아래로 내려간다
+      900px  보통 → 좁은 화면.        왼쪽 메뉴가 상단 가로 탭으로 바뀐다
+      640px  손에 들고 보는 화면.      모두 1열, 조작부는 세로로 쌓는다
+
+   새 화면을 만들 때도 이 세 값만 쓴다. */
+
+/* --- 어두운 화면 (IBM Carbon — Gray 100, 상황실용) -----------------------
+   토큰 값만 바꾼다. 화면 코드는 어느 테마인지 알 필요가 없다. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas:        #161616;
+  --surface-1:     #262626;
+  --surface-2:     #393939;
+  --surface-hover: #333333;
+  --hairline:      #393939;
+  --hairline-soft: #2a2a2a;
+  --surface:       var(--surface-1);
+
+  --ink:        #f4f4f4;
+  --ink-muted:  #c6c6c6;
+  --ink-subtle: #8d8d8d;
+  --ink-faint:  #6f6f6f;
+
+  --primary:       #4589ff;
+  --primary-strong:#0f62fe;
+  --primary-hover: #5b9bff;
+  --on-primary:    #ffffff;
+
+  --g-low:      #24a148;
+  --g-mid:      #f1c21b;
+  --g-high:     #ff832b;
+  --g-critical: #da1e28;
+  --g-none:     #6f6f6f;
+
+  /* 어두운 바탕에서는 선명한 색이 그대로 잘 읽힌다 — 따로 누를 필요가 없다 */
+  --g-low-ink:      var(--g-low);
+  --g-mid-ink:      var(--g-mid);
+  --g-high-ink:     var(--g-high);
+  --g-critical-ink: var(--g-critical);
+  --g-none-ink:     var(--g-none);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.29;
+  letter-spacing: 0.16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 숫자는 항상 등폭 — 열이 흔들리면 순위표를 읽을 수 없다 */
+.num, td.num, .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 400; letter-spacing: 0; }
+h1 { font-size: 28px; font-weight: 300; line-height: 1.25; }
+h2 { font-size: 20px; line-height: 1.4; }
+h3 { font-size: 16px; font-weight: 600; }
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input, select { font-family: inherit; font-size: inherit; letter-spacing: inherit; }
+
+.eyebrow {
+  font-size: 12px; letter-spacing: 0.32px; text-transform: uppercase;
+  color: var(--ink-subtle); font-weight: 500;
+}
+
+/* --- 타일: 얇은 테두리, 그림자 없음 (Carbon) --- */
+.tile {
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-none);
+  padding: var(--sp-md);
+}
+
+/* --- 버튼 --- */
+.btn {
+  height: 32px; padding: 0 var(--sp-md);
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--hairline); border-radius: var(--r-none);
+  cursor: pointer; transition: background .11s cubic-bezier(.2,0,.38,.9);
+}
+.btn:hover { background: var(--surface-hover); }
+.btn--primary { background: var(--primary-strong); border-color: var(--primary-strong); color: var(--on-primary); }
+.btn--primary:hover { background: var(--primary-hover); }
+.btn--sm { height: 26px; padding: 0 var(--sp-sm); font-size: 12px; }
+.btn[aria-pressed='true'] { background: var(--primary-strong); border-color: var(--primary-strong); color: #fff; }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.field {
+  height: 32px; padding: 0 var(--sp-sm);
+  background: var(--surface-2); color: var(--ink);
+  border: 0; border-bottom: 1px solid var(--ink-subtle); border-radius: var(--r-none);
+}
+.field:focus { outline: 2px solid var(--primary); outline-offset: -2px; }
+
+/* --- 필터 라벨 · 머리말 조작부 ------------------------------------------
+   Dashboard · Verification · Allocation 이 똑같은 .lbl 을 각자 복사해 두고
+   있었다. 한 곳만 고치면 나머지가 조용히 어긋난다. 여기서 한 번만 정의한다. */
+.lbl { display: flex; flex-direction: column; gap: 4px;
+       font-size: 11px; color: var(--ink-subtle); letter-spacing: .32px; }
+.lbl.grow { flex: 1; }
+.head__ctl { display: flex; gap: var(--sp-sm); align-items: flex-end; }
+
+/* 날짜는 화면 어디서나 같은 글꼴로 읽혀야 한다. 표와 본문은 모노로 날짜를
+   쓰는데 입력칸만 본문 글꼴이면 같은 값이 서로 다른 것처럼 보인다. */
+.field[type='date'] { font-family: var(--font-mono); font-size: 13px; }
+
+/* --- 표 --- */
+table.data { width: 100%; border-collapse: collapse; }
+table.data th {
+  text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .32px;
+  color: var(--ink-muted); background: var(--surface-2);
+  padding: var(--sp-xs) var(--sp-sm); border-bottom: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+/* 밝은 화면에서는 회색 띠가 무겁게 보인다. 배경을 지우고 아래 선으로만 나눈다. */
+:root:not([data-theme='dark']) table.data th {
+  background: var(--inset);
+  border-bottom: 1px solid var(--ink-faint);
+}
+:root:not([data-theme='dark']) .field {
+  background: var(--inset);
+  border: 1px solid var(--hairline); border-bottom-color: var(--ink-subtle);
+}
+/* 밝은 화면에서는 카드가 배경과 거의 같은 밝기라 테두리가 곧 경계다.
+   선이 흐리면 카드가 어디서 끝나는지 안 보인다. */
+:root:not([data-theme='dark']) .tile {
+  border-color: var(--hairline);
+}
+/* 머리말 고정은 **표가 자기 스크롤 상자 안에 있을 때만** 건다.
+   본문(.main)이 스크롤 컨테이너가 된 뒤로, 상자 없는 표의 머리말이 페이지에
+   붙어 위쪽 내용 위로 떠오르며 글자가 겹쳤다. */
+.scroll > table.data th,
+.tblwrap > table.data th {
+  position: sticky; top: 0; z-index: 2;
+}
+table.data td {
+  padding: var(--sp-xs) var(--sp-sm);
+  border-bottom: 1px solid var(--hairline-soft); white-space: nowrap;
+}
+table.data tbody tr:hover { background: var(--surface-hover); }
+table.data td.r, table.data th.r { text-align: right; }
+
+.scroll { overflow: auto; }
+.scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--surface-2); }
+.scroll::-webkit-scrollbar-track { background: transparent; }
+
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .28s cubic-bezier(0,0,.38,.9) both; }

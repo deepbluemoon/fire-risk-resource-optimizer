@@ -1,0 +1,6 @@
+# 화재위험 예측 일일 배치 — 매일 02:30
+# 설치: crontab deploy/fire-batch.cron   (또는 crontab -e 로 아래 한 줄 추가)
+#
+# 02시 발표 기상 예보를 쓰므로 02:30 에 돈다 (research.md R-1).
+# 실패해도 전일 결과 → M0 기저율 순으로 폴백하며, 결과는 ops_batch_run 에 남는다.
+30 2 * * * .venv/bin/python -m fire_ml.batch.run_daily >> logs/batch.log 2>&1
